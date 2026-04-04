@@ -128,6 +128,7 @@
         }).addTo(map);
         L.control.locate({
     locateOptions: {
+		maxZoom: 17,
         enableHighAccuracy: true,  // Forces the phone to use GPS, not just Wi-Fi
         watch: true,               // Keeps updating as you walk
         maximumAge: 1000,          // Don't use "old" location data
