@@ -1,0 +1,1 @@
+var json_HOSPITAL_2 = {"type":"FeatureCollection","name":"HOSPITAL_2","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"id":null},"geometry":{"type":"MultiPoint","coordinates":[[84.040312506718593,21.861049292495654]]}}]}
