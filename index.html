@@ -126,7 +126,14 @@
         var zoomControl = L.control.zoom({
             position: 'topleft'
         }).addTo(map);
-        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        L.control.locate({
+    locateOptions: {
+        enableHighAccuracy: true,  // Forces the phone to use GPS, not just Wi-Fi
+        watch: true,               // Keeps updating as you walk
+        maximumAge: 1000,          // Don't use "old" location data
+        timeout: 10000             // How long to wait for a signal
+    }
+}).addTo(map);
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
         }
