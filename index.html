@@ -8,6 +8,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="css/leaflet.css">
         <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/L.Control.Locate.min.css">
         <link rel="stylesheet" href="css/qgis2web.css">
         <link rel="stylesheet" href="css/fontawesome-all.min.css">
         <link rel="stylesheet" href="css/leaflet.photon.css">
@@ -22,18 +23,12 @@
         <title></title>
     </head>
     <body>
-		<div style="position: fixed; top: 10px; left: 55px; z-index: 9999; background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); display: flex; align-items: center; border: 2px solid #004a99;">
-    <img src="images/logo.png" style="height: 50px; margin-right: 15px;">
-    <div style="line-height: 1.2;">
-        <b style="font-family: 'Segoe UI', Arial, sans-serif; font-size: 16px; color: #004a99; text-transform: uppercase;">Jharsuguda Engineering School</b><br>
-        <span style="font-family: Arial; font-size: 12px; color: #555; font-weight: bold;">CAMPUS GPS NAVIGATION</span>
-    </div>
-</div>
         <div id="map">
         </div>
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/L.Control.Locate.min.js"></script>
         <script src="js/multi-style-layer.js"></script>
         <script src="js/leaflet-svg-shape-markers.min.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
@@ -52,7 +47,7 @@
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[21.85608311580644,84.0369454530357],[21.866572559037763,84.04979207452125]]);
+        }).fitBounds([[21.855982356959736,84.03587946126291],[21.86647180019031,84.04872608274755]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -120,6 +115,7 @@
         var zoomControl = L.control.zoom({
             position: 'topleft'
         }).addTo(map);
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
         }
@@ -284,7 +280,8 @@
         function pop_Road_2_3(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">id</th>\
+                        <td>' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(String(feature.properties['Name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -329,7 +326,10 @@
         function pop_FILED_5_4(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><strong>id</strong><br />' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(String(feature.properties['Name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -448,15 +448,28 @@
               addLabel(layer, i);
               i++;
         });
-        resetLabels([layer_Buildings_3_1]);
+        var i = 0;
+        layer_FILED_5_4.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Name']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_FILED_5_4'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        resetLabels([layer_Buildings_3_1,layer_FILED_5_4]);
         map.on("zoomend", function(){
-            resetLabels([layer_Buildings_3_1]);
+            resetLabels([layer_Buildings_3_1,layer_FILED_5_4]);
         });
         map.on("layeradd", function(){
-            resetLabels([layer_Buildings_3_1]);
+            resetLabels([layer_Buildings_3_1,layer_FILED_5_4]);
         });
         map.on("layerremove", function(){
-            resetLabels([layer_Buildings_3_1]);
+            resetLabels([layer_Buildings_3_1,layer_FILED_5_4]);
         });
         </script>        
     </body>
